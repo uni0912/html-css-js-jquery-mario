@@ -1,6 +1,63 @@
-<html>
-  <title>마리오게임</title>
-  <body>
-    <h1>Hello World</h1>
-   </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마리오 게임</title>
+    <style>
+        body {
+            margin: 0px;
+            background-image: url("asset/mainbg.png");
+            background-size: 800px 500px;
+            background-repeat: no-repeat;
+        }
+
+        #container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            border: 1px solid black;
+            text-align: center;
+            align-items: center;
+            line-height: 200%;
+            
+        }
+
+        #title {
+            margin-top: 50px;
+            width: 300px;
+        }
+
+        #image1 {
+            width: 100px;
+        }
+
+        #start-button {
+            width: 200px;
+            height: 30px;
+            
+        }
+
+        #spacebar {
+            width: 100px;
+        }
+        
+        
+    </style>
+    
+</head>
+<body>
+    <div id="container">
+    
+    <img id="title" src="asset/title.png" alt=""><br>
+    <div><img id="spacebar" src="asset/command-spacebar.png" alt="">: 점프 </div>
+    <div> <i class="fas fa-arrow-circle-right">: 파이어볼</i></div>
+    <img id="image1" src="asset/star.gif" alt=""><br>
+    <button id="start-button" onclick="location.href='mario.html'">게임시작</button>
+</div>
+
+</body>
 </html>

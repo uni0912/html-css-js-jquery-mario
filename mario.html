@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마리오 게임</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+
+    }
+
+    #container {
+      position: absolute;
+      width: 1000px;
+      height: 500px;
+      /* border: 1px solid black; */
+
+    }
+
+    #background {
+      width: 3000px;
+      height: 500px;
+      position: relative;
+      background-image: url("asset/background.png");
+      background-repeat: repeat-x;
+      background-size: 1000px 500px;
+      animation-name: example;
+      animation-duration: 10s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    @keyframes example {
+      from {
+        right: 0px;
+      }
+
+      to {
+        right: 1000px;
+      }
+    }
+
+    #mario {
+      position: absolute;
+      width: 100px;
+      bottom: 50px;
+      left: 50px;
+    }
+
+    #fireball {
+      position: absolute;
+      width: 70px;
+      bottom: 50px;
+    }
+
+    #enemy, #enemy2 {
+      position: absolute;
+      width: 50px;
+      bottom: 50px;
+      right: 50px;
+    }
+
+    #score {
+      position: absolute;
+      width: 200px;
+      top: 20px;
+      left: 80px;
+      font-family: Minecraft;
+    }
+
+    #coin {
+      position: absolute;
+      width: 50px;
+      top: 5px;
+      left: 10px;
+    }
+
+    #hearttext {
+      position: absolute;
+      right: 210px;
+      top: 20px;
+      font-family: Minecraft;
+    }
+
+    #heart1 {
+      position: absolute;
+      width: 50px;
+      top: 5px;
+      right: 150px;
+    }
+
+    #heart2 {
+      position: absolute;
+      width: 50px;
+      top: 5px;
+      right: 100px;
+    }
+
+    #heart3 {
+      position: absolute;
+      width: 50px;
+      top: 5px;
+      right: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+    <div id="background"></div>
+    <img id="coin" src="asset/coin.gif" alt="">
+    <div id="score"></div>
+    <!-- <div id="hearttext">Life :</div>
+    <div id="heart">
+      <img id="heart1" src="asset/heart.gif" alt="">
+      <img id="heart2" src="asset/heart.gif" alt="">
+      <img id="heart3" src="asset/heart.gif" alt="">
+    </div> -->
+    
+    <img id="mario" src="asset/mario.gif" alt="">
+    <img id="fireball" src="asset/fireball.gif" alt="">
+    <img id="enemy" src="asset/turtleshell.gif" alt="">
+    <img id="enemy2" src="asset/gb.gif" alt="">
+
+  </div>
+
+  <script>
+    let mario = $("#mario");
+    let enemy = $("#enemy");
+    let enemy2 = $("#enemy2");
+    let fire = $("#fireball");
+
+
+    let isJumping = false;
+    let isAttack = false;
+    $("#fireball").hide();
+
+    // 주인공 점프
+    function jump() {
+      isJumping = true;
+      mario.animate({
+        bottom: "+=200px"
+      }).animate({
+        bottom: "-=200px"
+      }, function () {
+        isJumping = false;
+      });
+    }
+
+    function attack() {
+      isAttack = true;
+      $("#fireball").show().animate({
+        left: "90%"
+      }, 2000,function () {
+        
+        $("#fireball").hide().animate({ left: "50px" },0);
+        isAttack = false;
+      });
+    }
+
+    function enemyMove() {
+      $("#enemy").animate({
+        right: "110%"
+      }, (Math.random() * 1000) + 5000, function () {
+        score += 100;
+        $("#enemy").css("right", "50px");
+        
+        // score += 100;
+      });
+
+      $("#enemy2").animate({
+        right: "110%"
+      }, (Math.random() * 1000) + 5000, function () {
+        score += 100;
+        $("#enemy2").css("right", "50px");
+        
+        // score += 100;
+      });
+
+    };
+
+    function deadCheck() {
+      let isDead = false;
+      let mario = $("#mario");
+      let enemy = $("#enemy");
+      let enemy2 = $("#enemy2");
+
+      let marioRightX = parseInt(mario.css("left").replace("px", "")) +
+        parseInt(mario.css("width").replace("px", ""));
+
+      let marioLeftX = parseInt(mario.css("left").replace("px", ""));
+
+      let marioBottom = parseInt(mario.css("bottom").replace("px", ""));
+
+      let enemyLeftX = parseInt(enemy.css("left").replace("px", ""));
+
+      let enemyTop = parseInt(enemy.css("bottom").replace("px", "")) +
+        parseInt(enemy2.css("height").replace("px", ""));
+
+      let enemy2LeftX = parseInt(enemy2.css("left").replace("px", ""));
+
+      let enemy2Top = parseInt(enemy2.css("bottom").replace("px", "")) +
+        parseInt(enemy2.css("height").replace("px", ""));
+
+      if (marioRightX > enemyLeftX && marioBottom < enemyTop && marioLeftX < enemyLeftX) {
+        isDead = true;
+      }
+
+      if (marioRightX > enemy2LeftX && marioBottom < enemy2Top && marioLeftX < enemy2LeftX) {
+        isDead = true;
+      }
+      
+      return isDead;
+    }
+
+    function enemyCheck() {
+      let enemyDead = false;
+
+      let fireRightX = parseInt(fire.css("left").replace("px","")) + 
+      parseInt(fire.css("width").replace("px",""));
+
+      let marioBottom = parseInt(mario.css("bottom").replace("px", ""));
+
+      let enemyLeftX = parseInt(enemy.css("left").replace("px", ""));
+
+      let enemyTop = parseInt(enemy.css("bottom").replace("px", "")) +
+        parseInt(enemy.css("height").replace("px", ""));
+
+        if (fireRightX >= enemyLeftX && isAttack == true) {
+          enemyDead = true;
+        }
+       
+       return enemyDead;
+    }
+
+    function enemy2Check() {
+      let enemy2Dead = false;
+
+      let fireRightX = parseInt(fire.css("left").replace("px","")) + 
+      parseInt(fire.css("width").replace("px",""));
+
+      let marioBottom = parseInt(mario.css("bottom").replace("px", ""));
+
+      let enemy2LeftX = parseInt(enemy2.css("left").replace("px", ""));
+
+      let enemy2Top = parseInt(enemy2.css("bottom").replace("px", "")) +
+        parseInt(enemy2.css("height").replace("px", ""));
+
+        if (fireRightX >= enemy2LeftX && isAttack == true) {
+          enemy2Dead = true;
+        }
+       
+       return enemy2Dead;
+    }
+
+
+    // 스페이스바 누르면 점프
+    $("body").keydown(function (event) {
+      switch (event.code) {
+        case "Space":
+          // 스페이스 연타 방지
+          if (isJumping == false) {
+            jump();
+          }
+          break;
+          // 오른쪽화살표 누르면 파이어볼 발사
+        case "ArrowRight":
+          if (isAttack == false) {
+            attack();
+          }
+          break;
+         }
+         });
+
+
+
+    var old = new Date().getTime();
+
+ 
+    let score = 0;
+    setInterval (function () {
+      enemyMove();      // 적 이동
+      
+      //죽었는지 체크
+      if (deadCheck() == true) {
+        var now = new Date().getTime();
+        mario.fadeOut(100).fadeIn(100);
+        // alert("마리오가 죽었습니다. \n점수 : " + score + " (" +
+        //   (now - old) / 1000 + " 초 버텼습니다.)"); 
+        // window.location.reload();
+        score = 0;
+      }  
+
+      if (enemyCheck() == true) {
+        score += 100;
+        fire.stop(false, true);
+        enemy.stop(false, true);
+        // enemy.stop().animate({right: "50px"}, 100);
+      }
+
+      if (enemy2Check() == true) {
+        score += 100;
+        fire.stop(false, true);
+        enemy2.stop(false, true);
+        
+      }
+
+      console.log(score);
+      document.getElementById("score").innerText = "score : " + score;
+
+    }, 33);
+  </script>
+</body>
+
+</html>
